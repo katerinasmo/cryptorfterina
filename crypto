@@ -1,0 +1,17 @@
+def update_version(build_number):
+	prod_version_str_macro = "#define VERSION_INFO_STR"
+	file_version_str_macro = "#define VER_FILEVERSION_STR"
+	file_version_macro = "#define VER_FILEVERSION"
+
+	STR_VERSION = get_str_version_number(build_number)
+	VERSION = STR_VERSION.replace('.', ',')
+
+	for filename in ("../common.shared/version_info_constants.h", ):
+		for line in fileinput.input(filename, inplace=True):
+			if prod_version_str_macro in line:
+				line = prod_version_str_macro + ' "'+STR_VERSION+'"\n'
+			elif file_version_str_macro in line:
+				line = file_version_str_macro + ' "'+STR_VERSION+'"\n'
+			elif file_version_macro in line:
+				line = file_version_macro + ' '+VERSION+'\n'
+			print(line, end='')
